@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>杭州萧山技师学院AI专用网站 - AI辅助学术导航平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --accent-color: #FF2D55;
+            --text-primary: #1D1D1F;
+            --text-secondary: #86868B;
+            --bg-primary: #F5F5F7;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --gradient-2: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%);
+            --gradient-3: linear-gradient(135deg, #fa709a 0%, #fee140 50%, #30cfd0 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 15%, #f093fb 30%, #4facfe 50%, #00f2fe 70%, #43e97b 85%, #fa709a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(79, 172, 254, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.85) 100%);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 15px 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 50%, #AF52DE 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.4), 0 4px 12px rgba(88, 86, 214, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .nav-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 30px 50px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 头部区域 */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .main-title {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.9) 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 30px rgba(255, 255, 255, 0.5);
+            letter-spacing: -0.5px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .main-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+        }
+
+        /* 搜索框 */
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 50px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 18px 50px 18px 25px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            font-size: 16px;
+            color: var(--text-primary);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: rgba(0, 122, 255, 0.6);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+            box-shadow: 0 12px 48px rgba(0, 122, 255, 0.4), 0 4px 16px rgba(88, 86, 214, 0.3);
+            transform: translateY(-3px) scale(1.01);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 20px;
+        }
+
+        /* 分类标签 */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .category-tab {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.75) 100%);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .category-tab:hover::before {
+            left: 100%;
+        }
+
+        .category-tab:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .category-tab.active {
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 50%, #AF52DE 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 32px rgba(0, 122, 255, 0.5), 0 4px 16px rgba(88, 86, 214, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* 工具网格 */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.85) 100%);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            padding: 28px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #007AFF 0%, #5856D6 50%, #AF52DE 100%);
+            transform: scaleX(0);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(0, 122, 255, 0.6);
+        }
+
+        .tool-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 122, 255, 0.3);
+            border-color: rgba(0, 122, 255, 0.5);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+        }
+
+        .tool-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .tool-card:hover::after {
+            opacity: 1;
+        }
+
+        .tool-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 50%, #AF52DE 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.4), 0 4px 12px rgba(88, 86, 214, 0.3);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tool-card:hover .tool-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 12px 32px rgba(0, 122, 255, 0.5), 0 6px 16px rgba(88, 86, 214, 0.4);
+        }
+
+        .tool-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tool-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 15px;
+            min-height: 80px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-align: justify;
+        }
+
+        .tool-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .tool-tag {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.15) 0%, rgba(88, 86, 214, 0.15) 100%);
+            border: 1px solid rgba(0, 122, 255, 0.2);
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--primary-color);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover .tool-tag {
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.25) 0%, rgba(88, 86, 214, 0.25) 100%);
+            border-color: rgba(0, 122, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .tool-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        /* 统计信息 */
+        .stats {
+            text-align: center;
+            margin-top: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.85) 100%);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .stats-text {
+            font-size: 18px;
+            color: var(--text-primary);
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-text span {
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 50%, #AF52DE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 32px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .container {
+                padding: 100px 20px 30px;
+            }
+
+            .category-tabs {
+                gap: 10px;
+            }
+
+            .category-tab {
+                padding: 10px 18px;
+                font-size: 12px;
+            }
+        }
+
+        /* 加载动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tool-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo-section">
+                <div class="logo">萧技</div>
+                <div class="nav-title">杭州萧山技师学院AI专用网站</div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#tools">AI工具</a></li>
+                <li><a href="#academic">学术资源</a></li>
+                <li><a href="#about">关于</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1 class="main-title">杭州萧山技师学院AI专用网站</h1>
+            <p class="subtitle">AI辅助学术导航平台 - 汇聚优质AI工具与学术资源</p>
+        </div>
+
+        <!-- 搜索框 -->
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchBox" placeholder="搜索AI工具或学术网站...">
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <!-- 分类标签 -->
+        <div class="category-tabs" id="categoryTabs">
+            <div class="category-tab active" data-category="all">全部</div>
+            <div class="category-tab" data-category="search">AI搜索</div>
+            <div class="category-tab" data-category="writing">AI写作</div>
+            <div class="category-tab" data-category="image">AI图像</div>
+            <div class="category-tab" data-category="video">AI视频</div>
+            <div class="category-tab" data-category="voice">AI语音</div>
+            <div class="category-tab" data-category="code">AI编程</div>
+            <div class="category-tab" data-category="academic">学术资源</div>
+            <div class="category-tab" data-category="other">其他工具</div>
+        </div>
+
+        <!-- 工具网格 -->
+        <div class="tools-grid" id="toolsGrid"></div>
+
+        <!-- 统计信息 -->
+        <div class="stats">
+            <p class="stats-text">共收录 <span id="totalCount">0</span> 款AI工具与学术资源</p>
+        </div>
+    </div>
+
+    <script>
+        // AI工具数据
+        const aiTools = [
+            // AI搜索类
+            { name: '秘塔AI搜索', url: 'https://metaso.cn', desc: '新一代AI搜索引擎，基于大语言模型技术，能够理解自然语言查询并提供精准答案。支持实时信息检索、多轮对话、知识问答等功能，是学术研究和日常信息获取的得力助手。', category: 'search', icon: '🔍', tags: ['搜索', 'AI'] },
+            { name: '360智脑', url: 'https://ai.360.cn', desc: '360公司推出的AI智能助手，集成了搜索、对话、创作等多种功能。支持多模态交互，能够处理文本、图像等多种输入，为学术研究和日常工作提供全方位的AI支持。', category: 'search', icon: '🧠', tags: ['搜索', '助手'] },
+            { name: '百度文心一言', url: 'https://yiyan.baidu.com', desc: '百度推出的AI对话助手，基于文心大模型技术。支持文本生成、代码编写、图像理解等功能，能够帮助用户进行学术写作、数据分析、知识问答等多种任务。', category: 'search', icon: '💬', tags: ['对话', 'AI'] },
+            { name: '阿里通义千问', url: 'https://tongyi.aliyun.com', desc: '阿里巴巴开发的AI大模型，具备强大的语言理解和生成能力。支持长文本处理、多轮对话、知识推理等功能，适用于学术研究、内容创作、代码编写等多种场景。', category: 'search', icon: '🤖', tags: ['对话', 'AI'] },
+            { name: '腾讯混元', url: 'https://hunyuan.tencent.com', desc: '腾讯推出的AI助手，整合了腾讯在AI领域的技术积累。支持文本生成、图像理解、代码编写等功能，能够为学术研究和日常工作提供智能化的解决方案。', category: 'search', icon: '☁️', tags: ['对话', 'AI'] },
+            { name: 'Kimi智能助手', url: 'https://kimi.moonshot.cn', desc: '月之暗面开发的AI助手，以超长上下文处理能力著称。支持处理长达200万字的文档，能够进行深度阅读、知识提取、内容总结等任务，是学术研究的理想工具。', category: 'search', icon: '🌙', tags: ['对话', '长文本'] },
+            { name: '豆包', url: 'https://www.doubao.com', desc: '字节跳动推出的AI助手，基于自研大模型技术。支持文本对话、图像生成、代码编写等功能，能够帮助用户进行内容创作、问题解答、学习辅助等多种任务。', category: 'search', icon: '🎯', tags: ['对话', 'AI'] },
+            { name: '智谱清言', url: 'https://chatglm.cn', desc: '智谱AI开发的对话助手，基于ChatGLM大模型。支持多轮对话、知识问答、文本生成等功能，能够理解复杂问题并提供准确答案，适合学术研究和日常使用。', category: 'search', icon: '💡', tags: ['对话', 'AI'] },
+            { name: '文心一格', url: 'https://yige.baidu.com', desc: '百度推出的AI图像生成平台，基于文心大模型。支持文本到图像的生成，能够根据描述创作各种风格的图像，适用于学术演示、创意设计、内容创作等场景。', category: 'image', icon: '🎨', tags: ['图像', '生成'] },
+            { name: '通义万相', url: 'https://tongyi.aliyun.com/wanxiang', desc: '阿里巴巴开发的AI图像生成工具，支持多种图像生成模式。能够根据文本描述生成高质量图像，支持风格迁移、图像编辑等功能，是创意设计和学术演示的好帮手。', category: 'image', icon: '🖼️', tags: ['图像', '生成'] },
+            
+            // AI写作类
+            { name: '密塔写作猫', url: 'https://xiezuocat.com', desc: '专业的AI智能写作助手，提供文章写作、文本润色、语法检查等功能。支持多种写作场景，包括学术论文、商业文案、创意写作等，能够帮助用户提升写作质量和效率。', category: 'writing', icon: '✍️', tags: ['写作', '润色'] },
+            { name: 'WPS AI', url: 'https://ai.wps.cn', desc: 'WPS Office集成的AI智能写作助手，深度融入办公场景。支持文档生成、内容改写、格式优化等功能，能够帮助用户快速完成各类文档创作，提升办公效率。', category: 'writing', icon: '📝', tags: ['写作', '办公'] },
+            { name: '讯飞智文', url: 'https://www.iflytek.com', desc: '讯飞推出的AI写作平台，基于自然语言处理技术。支持文章生成、内容优化、多语言翻译等功能，能够帮助用户进行学术写作、商业文案创作等多种任务。', category: 'writing', icon: '📄', tags: ['写作', 'AI'] },
+            { name: '笔神作文', url: 'https://www.bishen.com', desc: '专业的AI作文辅助工具，主要面向学生和教育场景。提供作文素材、写作建议、范文参考等功能，能够帮助学生提升写作水平，是教育领域的优秀AI工具。', category: 'writing', icon: '✏️', tags: ['写作', '教育'] },
+            { name: '爱改写', url: 'https://www.igaixie.com', desc: '专业的AI文本改写工具，能够对文本进行智能改写和优化。支持同义替换、句式调整、风格转换等功能，帮助用户快速完成文本修改，提升内容质量。', category: 'writing', icon: '🔄', tags: ['改写', '润色'] },
+            { name: 'Get写作', url: 'https://getgetai.com', desc: 'AI内容创作平台，提供全方位的写作支持。支持文章生成、内容优化、SEO优化等功能，能够帮助用户快速创作高质量内容，适用于自媒体、营销等多种场景。', category: 'writing', icon: '📚', tags: ['写作', '创作'] },
+            { name: 'Notion AI', url: 'https://www.notion.so/product/ai', desc: 'Notion集成的AI写作助手，与笔记功能深度结合。支持文档生成、内容总结、任务规划等功能，能够帮助用户进行知识管理和内容创作，提升工作效率。', category: 'writing', icon: '📋', tags: ['写作', '笔记'] },
+            { name: 'Effidit', url: 'https://effidit.qq.com', desc: '腾讯开发的AI智能写作工具，提供文本生成、内容改写、智能纠错等功能。支持多种写作场景，能够帮助用户提升写作效率和质量，是学术写作的好帮手。', category: 'writing', icon: '✍️', tags: ['写作', 'AI'] },
+            { name: '彩云小梦', url: 'https://if.caiyunai.com', desc: '专业的AI小说创作助手，支持长篇小说的创作。提供情节生成、人物设定、对话创作等功能，能够帮助作者进行创意写作，是文学创作领域的优秀AI工具。', category: 'writing', icon: '📖', tags: ['创作', '小说'] },
+            { name: 'Jasper AI', url: 'https://www.jasper.ai', desc: '专业的AI营销文案生成工具，主要面向商业场景。支持广告文案、社交媒体内容、邮件营销等多种文案生成，能够帮助营销人员快速创作高质量内容。', category: 'writing', icon: '📢', tags: ['营销', '文案'] },
+            
+            // AI图像类
+            { name: '6pen Art', url: 'https://6pen.art', desc: '国内领先的AI绘画生成平台，支持多种艺术风格。用户只需输入文字描述，即可生成高质量的绘画作品。支持国画、油画、水彩等多种风格，是艺术创作和设计的好工具。', category: 'image', icon: '🎨', tags: ['绘画', '生成'] },
+            { name: 'Tiamat', url: 'https://www.tiamat.ai', desc: '专业的AI图像生成工具，支持高质量的图像创作。提供多种生成模式和风格选项，能够根据用户需求生成各种类型的图像，适用于设计、艺术创作等场景。', category: 'image', icon: '🖼️', tags: ['图像', '生成'] },
+            { name: 'Vega AI', url: 'https://www.rightbrain.art', desc: 'AI艺术创作平台，专注于创意图像生成。支持多种艺术风格和创作模式，能够帮助用户进行艺术创作、设计辅助等任务，是创意工作者的得力助手。', category: 'image', icon: '🎭', tags: ['艺术', '创作'] },
+            { name: '即时设计AI', url: 'https://js.design', desc: '集成AI功能的在线设计工具，支持UI/UX设计。提供AI辅助设计、智能布局、素材生成等功能，能够帮助设计师快速完成设计任务，提升设计效率。', category: 'image', icon: '🎨', tags: ['设计', 'AI'] },
+            { name: '稿定设计', url: 'https://www.gaoding.com', desc: '专业的AI在线设计平台，提供丰富的设计模板和工具。支持海报、PPT、社交媒体图片等多种设计场景，AI功能能够帮助用户快速完成设计任务。', category: 'image', icon: '🖌️', tags: ['设计', '模板'] },
+            { name: 'Canva AI', url: 'https://www.canva.cn', desc: 'Canva集成的AI设计工具，支持智能设计生成。提供模板推荐、图像生成、内容优化等功能，能够帮助用户快速创作专业级设计作品，适合各种设计需求。', category: 'image', icon: '📐', tags: ['设计', 'AI'] },
+            { name: '美图AI', url: 'https://www.meitu.com', desc: '美图推出的AI图像处理工具，提供智能美颜、背景替换、风格转换等功能。支持多种图像编辑操作，能够帮助用户快速完成图像处理任务，是图像编辑的好工具。', category: 'image', icon: '📷', tags: ['图像', '处理'] },
+            { name: '醒图', url: 'https://www.xingtu.com', desc: '专业的AI图像编辑工具，提供丰富的编辑功能。支持智能抠图、滤镜效果、图像增强等功能，能够帮助用户快速完成图像编辑，是图像处理领域的优秀工具。', category: 'image', icon: '🖼️', tags: ['编辑', 'AI'] },
+            { name: '秒剪', url: 'https://www.miaojian.com', desc: 'AI智能视频剪辑工具，支持自动剪辑和智能编辑。提供素材推荐、转场效果、字幕生成等功能，能够帮助用户快速完成视频制作，是视频创作的好帮手。', category: 'video', icon: '🎬', tags: ['视频', '剪辑'] },
+            
+            // AI视频类
+            { name: '剪映', url: 'https://lv.ulikecam.com', desc: '字节跳动推出的AI智能视频剪辑工具，功能强大且易用。支持自动剪辑、智能字幕、特效添加等功能，能够帮助用户快速完成专业级视频制作，是视频创作者的首选工具。', category: 'video', icon: '🎥', tags: ['视频', '剪辑'] },
+            { name: '来画', url: 'https://www.laihua.com', desc: '专业的AI动画视频制作平台，支持多种动画风格。提供模板库、素材库、智能配音等功能，能够帮助用户快速创作动画视频，适用于教育、营销等多种场景。', category: 'video', icon: '🎞️', tags: ['动画', '视频'] },
+            { name: '一帧秒创', url: 'https://www.aigc.cn', desc: 'AI视频生成平台，支持从文本到视频的自动生成。提供智能剪辑、素材匹配、特效添加等功能，能够帮助用户快速完成视频创作，是内容创作者的得力助手。', category: 'video', icon: '🎬', tags: ['视频', '生成'] },
+            { name: 'Runway', url: 'https://runwayml.com', desc: '国际领先的AI视频创作工具，提供强大的视频生成和编辑功能。支持文本到视频、图像到视频、视频编辑等多种功能，是专业视频创作者的首选工具。', category: 'video', icon: '🎭', tags: ['视频', '创作'] },
+            { name: 'Pika', url: 'https://pika.art', desc: '专业的AI视频生成工具，支持高质量的短视频创作。提供多种生成模式和风格选项，能够根据文本或图像生成视频内容，是视频创作领域的创新工具。', category: 'video', icon: '⚡', tags: ['视频', '生成'] },
+            
+            // AI语音类
+            { name: '讯飞语音', url: 'https://www.iflyrec.com', desc: '讯飞推出的语音识别转写服务，准确率高且支持多语言。提供实时转写、离线识别、方言识别等功能，能够帮助用户快速完成语音转文字任务，是会议记录和笔记的好工具。', category: 'voice', icon: '🎤', tags: ['语音', '转写'] },
+            { name: '腾讯云语音', url: 'https://cloud.tencent.com/product/asr', desc: '腾讯云提供的语音识别服务，功能强大且稳定可靠。支持实时识别、批量转写、多语言识别等功能，能够为应用开发提供专业的语音识别能力。', category: 'voice', icon: '🔊', tags: ['语音', '识别'] },
+            { name: '百度语音', url: 'https://ai.baidu.com/tech/speech', desc: '百度推出的语音技术平台，提供语音识别和语音合成服务。支持多种语言和方言，准确率高，能够帮助用户进行语音交互和语音转写等任务。', category: 'voice', icon: '🗣️', tags: ['语音', 'AI'] },
+            { name: '标贝科技', url: 'https://www.data-baker.com', desc: '专业的AI语音合成平台，提供高质量的语音合成服务。支持多种音色和语言，能够生成自然流畅的语音，适用于有声读物、语音助手等多种场景。', category: 'voice', icon: '📢', tags: ['语音', '合成'] },
+            { name: '魔音工坊', url: 'https://www.moyin.com', desc: '专业的AI语音克隆工具，支持声音复刻和定制。能够学习特定声音特征并生成相似语音，适用于配音、有声读物等场景，是语音创作领域的创新工具。', category: 'voice', icon: '🎙️', tags: ['语音', '克隆'] },
+            
+            // AI编程类
+            { name: 'GitHub Copilot', url: 'https://github.com/features/copilot', desc: 'GitHub推出的AI代码助手，基于OpenAI技术。能够理解代码上下文并提供智能代码补全，支持多种编程语言，能够显著提升编程效率，是开发者的得力助手。', category: 'code', icon: '💻', tags: ['编程', 'AI'] },
+            { name: 'CodeGeeX', url: 'https://codegeex.cn', desc: '清华大学开发的AI代码生成工具，支持多种编程语言。提供代码补全、代码生成、代码解释等功能，能够帮助开发者快速编写代码，是编程学习的优秀工具。', category: 'code', icon: '⚙️', tags: ['编程', '生成'] },
+            { name: '通义灵码', url: 'https://tongyi.aliyun.com/lingma', desc: '阿里巴巴推出的AI编程助手，深度集成开发环境。提供代码补全、代码生成、代码审查等功能，支持多种IDE和编程语言，能够帮助开发者提升编程效率。', category: 'code', icon: '🔧', tags: ['编程', 'AI'] },
+            { name: 'Comate', url: 'https://comate.baidu.com', desc: '百度推出的AI编程助手，基于文心大模型。提供智能代码补全、代码生成、代码解释等功能，支持多种编程语言和开发场景，是开发者的好帮手。', category: 'code', icon: '🛠️', tags: ['编程', 'AI'] },
+            { name: 'Cursor', url: 'https://cursor.sh', desc: '基于AI的代码编辑器，集成了强大的AI编程能力。提供智能代码补全、代码生成、代码重构等功能，能够帮助开发者更高效地编写代码，是编程领域的创新工具。', category: 'code', icon: '⌨️', tags: ['编程', '编辑器'] },
+            { name: 'v0', url: 'https://v0.dev', desc: 'Vercel推出的AI UI组件生成工具，能够根据描述生成React组件。支持多种UI风格和组件类型，能够帮助前端开发者快速构建界面，是UI开发的创新工具。', category: 'code', icon: '🎨', tags: ['UI', '生成'] },
+            
+            // 学术资源类
+            { name: '中国知网', url: 'https://www.cnki.net', desc: '中国最大的学术文献数据库，收录了海量的中文期刊、学位论文、会议论文等资源。提供全文检索、引文分析、知识发现等功能，是学术研究不可或缺的重要平台。', category: 'academic', icon: '📚', tags: ['学术', '文献'] },
+            { name: '万方数据', url: 'https://www.wanfangdata.com.cn', desc: '国内领先的学术文献检索平台，收录了丰富的学术资源。提供全文检索、知识服务、数据分析等功能，能够帮助研究者快速找到所需文献，是学术研究的重要工具。', category: 'academic', icon: '📖', tags: ['学术', '文献'] },
+            { name: '维普资讯', url: 'https://www.cqvip.com', desc: '中文科技期刊数据库，收录了大量科技期刊文献。提供全文检索、期刊导航、引文分析等功能，是科技工作者和研究人员的重要资源平台。', category: 'academic', icon: '📑', tags: ['学术', '期刊'] },
+            { name: '超星学习通', url: 'https://www.chaoxing.com', desc: '综合性在线学习平台，提供丰富的学习资源和工具。支持在线课程、电子图书、学术资源等功能，能够帮助学习者进行系统化的学习和研究。', category: 'academic', icon: '🎓', tags: ['学习', '教育'] },
+            { name: '国家图书馆', url: 'https://www.nlc.cn', desc: '国家数字图书馆，提供海量的数字资源和服务。收录了丰富的图书、期刊、古籍等资源，支持在线阅读、文献传递等功能，是学术研究的重要资源库。', category: 'academic', icon: '🏛️', tags: ['图书馆', '资源'] },
+            { name: '读秀学术搜索', url: 'https://www.duxiu.com', desc: '专业的学术文献搜索平台，提供全文检索和知识服务。支持图书、期刊、报纸等多种资源类型，能够帮助研究者快速找到所需文献，是学术研究的好工具。', category: 'academic', icon: '🔎', tags: ['搜索', '学术'] },
+            { name: '百度学术', url: 'https://xueshu.baidu.com', desc: '百度推出的学术搜索平台，整合了国内外学术资源。提供文献检索、引用分析、学术趋势等功能，能够帮助研究者快速找到相关文献，是学术研究的重要工具。', category: 'academic', icon: '🔬', tags: ['学术', '搜索'] },
+            { name: 'Google Scholar', url: 'https://scholar.google.com', desc: '谷歌学术搜索，全球最大的学术搜索引擎。收录了海量的学术文献，提供全文检索、引用分析、相关文章推荐等功能，是国际学术研究的重要平台。', category: 'academic', icon: '🌐', tags: ['学术', '国际'] },
+            { name: 'ResearchGate', url: 'https://www.researchgate.net', desc: '全球最大的学术社交网络，连接了数百万研究者。提供论文分享、学术讨论、合作交流等功能，能够帮助研究者建立学术网络，是学术交流的重要平台。', category: 'academic', icon: '👥', tags: ['学术', '社交'] },
+            { name: 'arXiv', url: 'https://arxiv.org', desc: '全球最大的预印本论文库，收录了大量未发表的学术论文。提供免费访问、全文下载、分类浏览等功能，是研究者获取最新研究成果的重要平台。', category: 'academic', icon: '📄', tags: ['论文', '预印本'] },
+            { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov', desc: '美国国家医学图书馆的医学文献数据库，收录了海量的医学文献。提供全文检索、引文分析、相关文章推荐等功能，是医学研究的重要资源平台。', category: 'academic', icon: '🏥', tags: ['医学', '文献'] },
+            { name: 'IEEE Xplore', url: 'https://ieeexplore.ieee.org', desc: 'IEEE数字图书馆，收录了电气工程和计算机科学领域的顶级期刊和会议论文。提供全文检索、技术标准、在线课程等功能，是工程技术研究的重要资源。', category: 'academic', icon: '⚡', tags: ['工程', '技术'] },
+            { name: 'ScienceDirect', url: 'https://www.sciencedirect.com', desc: '爱思唯尔旗下的科学文献数据库，收录了大量高质量学术期刊。提供全文检索、引文分析、知识发现等功能，是科学研究的重要资源平台。', category: 'academic', icon: '🔬', tags: ['科学', '文献'] },
+            { name: 'Web of Science', url: 'https://www.webofscience.com', desc: '全球最权威的科学引文索引数据库，收录了高质量的学术期刊。提供引文分析、影响因子查询、研究趋势分析等功能，是学术评价和研究分析的重要工具。', category: 'academic', icon: '🌍', tags: ['引文', '索引'] },
+            { name: 'Scopus', url: 'https://www.scopus.com', desc: '爱思唯尔推出的学术文献数据库，收录了海量的学术资源。提供全文检索、引文分析、作者分析等功能，是学术研究和文献分析的重要平台。', category: 'academic', icon: '📊', tags: ['学术', '数据库'] },
+            
+            // 其他工具类
+            { name: 'ChatGPT', url: 'https://chat.openai.com', desc: 'OpenAI开发的AI对话助手，基于GPT大模型技术。支持多轮对话、文本生成、代码编写等功能，能够帮助用户进行学术研究、内容创作、问题解答等多种任务。', category: 'other', icon: '🤖', tags: ['对话', 'AI'] },
+            { name: 'Claude', url: 'https://claude.ai', desc: 'Anthropic开发的AI助手，以安全性和准确性著称。支持长文本处理、多轮对话、代码编写等功能，能够帮助用户进行学术研究、内容分析等任务。', category: 'other', icon: '🧠', tags: ['对话', 'AI'] },
+            { name: 'Midjourney', url: 'https://www.midjourney.com', desc: '顶级的AI图像生成工具，以艺术性和质量著称。支持多种艺术风格，能够生成高质量的图像作品，是艺术创作和设计领域的优秀工具。', category: 'other', icon: '🎨', tags: ['图像', '生成'] },
+            { name: 'Stable Diffusion', url: 'https://stability.ai', desc: '开源的AI图像生成模型，支持本地部署和定制。提供强大的图像生成能力，支持多种风格和模式，是AI图像生成领域的重要工具。', category: 'other', icon: '🖼️', tags: ['图像', '开源'] },
+            { name: 'Perplexity', url: 'https://www.perplexity.ai', desc: 'AI驱动的搜索引擎，结合了搜索和对话能力。能够实时搜索网络信息并提供准确答案，支持引用来源，是学术研究和信息获取的优秀工具。', category: 'other', icon: '🔍', tags: ['搜索', 'AI'] },
+            { name: 'Notion', url: 'https://www.notion.so', desc: '全能的智能笔记和协作工具，集成了AI功能。支持文档编辑、数据库管理、任务规划等功能，能够帮助用户进行知识管理和团队协作，是学术研究的优秀工具。', category: 'other', icon: '📝', tags: ['笔记', '协作'] },
+            { name: 'Obsidian', url: 'https://obsidian.md', desc: '强大的知识管理工具，支持双向链接和知识图谱。提供Markdown编辑、插件扩展、本地存储等功能，能够帮助用户建立个人知识库，是学术研究的理想工具。', category: 'other', icon: '💎', tags: ['笔记', '管理'] },
+            { name: 'Zotero', url: 'https://www.zotero.org', desc: '开源的文献管理工具，功能强大且免费。支持文献收集、整理、引用等功能，能够与Word等软件集成，是学术写作和文献管理的重要工具。', category: 'other', icon: '📚', tags: ['文献', '管理'] },
+            { name: 'Mendeley', url: 'https://www.mendeley.com', desc: '爱思唯尔推出的学术文献管理工具，集成了社交功能。提供文献收集、整理、分享、引用等功能，能够帮助研究者管理文献和建立学术网络。', category: 'other', icon: '📖', tags: ['文献', '管理'] },
+            { name: 'EndNote', url: 'https://endnote.com', desc: '专业的参考文献管理工具，功能全面且强大。支持文献收集、整理、引用格式设置等功能，能够与多种写作软件集成，是学术写作的专业工具。', category: 'other', icon: '📑', tags: ['文献', '引用'] },
+            { name: 'Grammarly', url: 'https://www.grammarly.com', desc: '专业的英文写作检查工具，提供语法、拼写、风格检查等功能。支持浏览器插件和桌面应用，能够帮助用户提升英文写作质量，是学术写作的好帮手。', category: 'other', icon: '✍️', tags: ['写作', '检查'] },
+            { name: 'DeepL', url: 'https://www.deepl.com', desc: '高质量的AI翻译工具，以准确性和自然度著称。支持多种语言互译，翻译质量接近人工翻译，是学术研究和日常使用的优秀翻译工具。', category: 'other', icon: '🌐', tags: ['翻译', 'AI'] },
+            { name: '有道翻译', url: 'https://fanyi.youdao.com', desc: '网易推出的智能翻译平台，支持多种语言和翻译模式。提供文本翻译、文档翻译、语音翻译等功能，能够帮助用户进行多语言交流和学习。', category: 'other', icon: '🔤', tags: ['翻译', 'AI'] },
+            { name: '腾讯翻译', url: 'https://fanyi.qq.com', desc: '腾讯推出的AI翻译服务，支持多种语言和场景。提供文本翻译、语音翻译、图片翻译等功能，翻译准确度高，是日常使用和学术研究的优秀工具。', category: 'other', icon: '🌍', tags: ['翻译', 'AI'] },
+            { name: '讯飞翻译', url: 'https://www.iflyrec.com', desc: '讯飞推出的AI翻译工具，结合了语音识别和翻译技术。支持实时翻译、离线翻译、多语言识别等功能，能够帮助用户进行跨语言交流和学习。', category: 'other', icon: '🗣️', tags: ['翻译', 'AI'] },
+        ];
+
+        // 初始化
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        // 渲染工具卡片
+        function renderTools() {
+            const grid = document.getElementById('toolsGrid');
+            const filteredTools = aiTools.filter(tool => {
+                const matchCategory = currentCategory === 'all' || tool.category === currentCategory;
+                const matchSearch = searchQuery === '' || 
+                    tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    tool.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+                return matchCategory && matchSearch;
+            });
+
+            if (filteredTools.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">🔍</div>
+                        <p>未找到相关工具，请尝试其他关键词</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredTools.map(tool => `
+                <a href="${tool.url}" target="_blank" class="tool-link">
+                    <div class="tool-card">
+                        <div class="tool-icon">${tool.icon}</div>
+                        <div class="tool-name">${tool.name}</div>
+                        <div class="tool-desc">${tool.desc}</div>
+                        <div class="tool-tags">
+                            ${tool.tags.map(tag => `<span class="tool-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+
+            // 更新统计
+            document.getElementById('totalCount').textContent = filteredTools.length;
+        }
+
+        // 分类切换
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentCategory = tab.dataset.category;
+                renderTools();
+            });
+        });
+
+        // 搜索功能
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderTools();
+        });
+
+        // 初始渲染
+        renderTools();
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
